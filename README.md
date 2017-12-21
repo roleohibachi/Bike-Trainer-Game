@@ -21,5 +21,7 @@ Further work may include:
 - Logging of game-workout data to fitness platforms (Strava, Garmin, whatever). 
 
 # External Dependencies
+
 https://github.com/MHeironimus/ArduinoJoystickLibrary
+
 https://github.com/GabrielBianconi/arduino-nunchuk
