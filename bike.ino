@@ -1,6 +1,5 @@
 
 const int hallPin = 3; //must be interruptable. 2 or 3 for Uno; 0, 1, 2, 3, 7 for Micro
-const int btnPin = 7; 
 
 int lastRev = 0;
 int revs = 0;
@@ -29,17 +28,7 @@ void setup() {
 }
 
 void loop() {
-//  if (digitalRead(btnPin) == LOW) {
-//    Serial.print(micros());
-//    Serial.print("\t\t");
-//    Serial.print(secs);
-//    Serial.print("\t\t");
-//    Serial.println(revs);
-//  }
-//  delay(50);
   if(output){
-    //Serial.print(secs);
-    //Serial.print("\t");
     Serial.println(lastRev*60); 
     output=false;
   }
@@ -47,11 +36,9 @@ void loop() {
 
 
 ISR(TIMER1_COMPA_vect) { //timer1 interrupt
-  //cli();
   lastRev = revs;
   revs = 0;
   output=true;
-  //sei();
 }
 
 void revISR(){
@@ -59,7 +46,7 @@ void revISR(){
 }
 
 void setTimer(int msecs){
-  //set timer1 interrupt (imprecisely)
+  //set timer1 interrupt (roughly)
   
   int compMatch = (int) (msecs * 15.624);
   
