@@ -1,9 +1,13 @@
+#include <Joystick.h>
+#include <ArduinoNunchuk.h>
+
 int throttleMax = 50; //starter value, roughly observed
 const int hallPin = 3; //must be interruptable. 2 or 3 for Uno; 0, 1, 2, 3, 7 for Micro
 
 int lastRev = 0;
 int revs = 0;
-boolean output = true;
+
+ArduinoNunchuk nunchuk = ArduinoNunchuk();
 
 Joystick_ Joystick( //optimized for nunchuck+bike throttle, I think
 	JOYSTICK_DEFAULT_REPORT_ID, //	uint8_t hidReportId - Default: 0x03 - Indicates the joystick's HID report ID.
@@ -30,30 +34,47 @@ void setup() {
   cli();//disable interrupts
 
   pinMode(hallPin, INPUT);
-  pinMode(btnPin, INPUT);
+  attachInterrupt(digitalPinToInterrupt(hallPin), throttleISR, RISING);
 
-  attachInterrupt(digitalPinToInterrupt(hallPin), revISR, RISING);
-
-  setTimer(250);
+  msecTimer(250);
 
   Serial.begin(115200);
   
-  //Serial.print("Time");
-  //Serial.print("\t");
-  Serial.println("RPM"); 
+  Serial.println("throttle\t"); 
+  Serial.println("nun0\tnun1\t"); 
+  Serial.println("nunX\tnunY"); 
   
   Joystick.setThrottleRange(0, throttleMax);
+  Joystick.setXAxisRange(-127, 127);//TODO: no idea
+  Joystick.setYAxisRange(-127, 127);//TODO: no idea
   Joystick.begin(false); //do not auto-update; I'll send updates via setThrottle(value) etc
   
+  nunchuk.init();
+	
   sei();//allow interrupts
 }
 
 void loop() {
-  if(output){
-    Serial.println(lastRev*60); //approx rotor RPM (not wheel rpm or speed. TODO) (max appears ~3000)
-    Joystick.setThrottle(lastRev);
-    output=false;
-  }
+  
+  
+  //throttle
+  Serial.println(lastRev);
+  Joystick.setThrottle(lastRev);
+  
+  //nunchuck
+  nunchuk.update();
+  
+  Serial.print(nunchuk.zButton, DEC);
+  Serial.println(nunchuk.cButton, DEC);
+  Serial.print(nunchuk.analogX, DEC);
+  Serial.print(nunchuk.analogY, DEC);
+
+  Joystick.setButton(0, nunchuk.zButton);
+  Joystick.setButton(1, nunchuk.cButton);
+  Joystick.setXAxis(nunchuk.analogX);
+  Joystick.setYAxis(nunchuk.analogY);
+
+  Joystick.sendState()
 }
 
 
@@ -61,15 +82,14 @@ ISR(TIMER1_COMPA_vect) { //timer1 interrupt
   cli(); //so this interrupt doesn't get interrupted mid-write by the other one
   lastRev = revs;
   revs = 0;
-  output=true;
-  sei();
+  sei(); //play ball
 }
 
-void revISR(){
+void throttleISR(){
   revs++;
 }
 
-void setTimer(int msecs){
+void msecTimer(int msecs){
   //set timer1 interrupt (roughly)
   //timer1 is 16-bit on both uno and leonardo, so this should work.
   //TODO, see "arduino-timerone" code already written. It uses nice tricks to optimize and neaten.
