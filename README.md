@@ -4,11 +4,11 @@ This project needs a better name.
 
 I have a bike trainer. It was cheap on Amazon. http://a.co/gge61I9
 
-This project monitors RPM using a hall sensor. 
+This project monitors RPM using a hall sensor. It requires an ATMega32U4 device, such as an Arduino Leonardo or Micro. With some refactoring, it should also work on a Teensy.
 
 It sends that RPM as a HID Joystick's throttle input, using the ArduinoJoystick library by Matthew Heironimus. You can fly a flight sim (fun), play a driving game (hard), or even map it to an FPS (Untested). It works with linux, mac, windows, consoles that support USB HID Joysticks, and mobile devices that support both HID Joysticks and USB-OTG connections.
 
-It also includes a wii nunchuck library by Gabriel Bianconi. The nunchuck is a great form factor for controlling a game while riding, especially with aero bars.
+It also includes a wii nunchuck library by Gabriel Bianconi. The nunchuck is a great form factor for controlling a game while riding, especially with aero bars. Be sure to use a 3.3v microcontroller (or a level shifter), so you don't fry the 'chuck.
 
 To set up my specific model of trainer, I added two small permanent magnets to the inside of the rotor. I put a digital hall effect sensor through the slots in the rotor's plastic cover. These should be cemented in place once they are verified to be functional, since it spins very quickly. TODO: pictures.
 
