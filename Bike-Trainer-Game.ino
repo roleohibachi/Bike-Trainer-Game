@@ -30,7 +30,8 @@ void setup() {
   Serial.print("nunZ\tnunC\t");
   Serial.print("nunX\tnunY");
   Serial.print("accX\taccY\taccZ");
-
+  Serial.println();
+  
   nunchuck.init();
 
 
