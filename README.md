@@ -20,8 +20,10 @@ The nunchuck's joystick is mapped to the HID joystick's X and Y axes, and polled
 - A potentiometer to scale throttle range, adjusting difficulty of achieving 100% throttle
 - A rotary-encoded turntable under the front wheel to sense steering position, for 2D games (like driving)
 - A second Hall sensor for pedaling cadence, which can be divided by wheel RPM to determine gear ratio
+- A linear potentiometer could also determine derailleur and brake positions. Braking input would be useful in driving games.
 - A generator to add variable resistance (and power!), with credit to www.genesgreenmachine.com. This may make RPM measurement nicer by eliminating those magnets and correlating voltage to throttle position.
 - Logging of game-workout data to fitness platforms (Strava, Garmin, whatever). 
+- A direct-drive bike trainer would reduce slippage of the rear tire, but it's not too bad right now.
 
 # External Dependencies
 - Matthew Heironimus's [ArduinoJoystick](https://github.com/MHeironimus/ArduinoJoystickLibrary) library, to appear as a USB HID Joystick.
