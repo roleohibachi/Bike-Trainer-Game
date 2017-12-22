@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include <TimerOne.h>
 #include <ArduinoNunchuk.h>
 
@@ -133,6 +134,8 @@ void throttleISR() { revs++; }
 
 
 =======
+=======
+>>>>>>> parent of 7834a46... bugfixes
 #include <Joystick.h>
 #include <Arduinonunchuck.h>
 
