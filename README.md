@@ -20,7 +20,7 @@ The nunchuck's joystick is mapped to the HID joystick's X and Y axes, and polled
 - A potentiometer to scale throttle range, adjusting difficulty of achieving 100% throttle
 - A rotary-encoded turntable under the front wheel to sense steering position, for 2D games (like driving)
 - A second Hall sensor for pedaling cadence, which can be divided by wheel RPM to determine gear ratio
-- A generator to add variable resistance (and power!), with credit to www.genesgreenmachine.com. This may make RPM measurement nicer by eliminating extra magnets and correlating generator output to HID throttle position.
+- A generator to add variable resistance (and power!), with credit to www.genesgreenmachine.com. This may make RPM measurement nicer by eliminating those magnets and correlating voltage to throttle position.
 - Logging of game-workout data to fitness platforms (Strava, Garmin, whatever). 
 
 # External Dependencies
