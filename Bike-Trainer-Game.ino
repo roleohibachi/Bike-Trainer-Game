@@ -1,5 +1,5 @@
 #include <Joystick.h>
-#include <Arduinonunchuck.h>
+#include <ArduinoNunchuk.h>
 
 int throttleMax = 50;  // starter value, roughly observed. Vary with pot?
 const int hatMax = 1024;  // TODO: ???
@@ -14,7 +14,7 @@ int xmax = 0;
 int zmax = 0;
 int hat = JOYSTICK_HATSWITCH_RELEASE;
 
-Arduinonunchuck nunchuck = Arduinonunchuck();
+ArduinoNunchuk nunchuck = ArduinoNunchuk();
 
 Joystick_ Joystick(  // optimized for nunchuck+bike throttle, I think
     JOYSTICK_DEFAULT_REPORT_ID,  // hidReportId
@@ -96,9 +96,9 @@ void loop() {
   // update value in timer ISR
   xmax = (abs(nunchuck.accelX) > abs(xmax)) ? nunchuck.accelX : xmax;
   zmax = (abs(nunchuck.accelZ) > abs(zmax)) ? nunchuck.accelZ : zmax;
-  Joystick.setHatSwitch(hatSwitch, hat);
+  Joystick.setHatSwitch(0, hat);
 
-  Joystick.sendState()
+  Joystick.sendState();
 }
 
 ISR(TIMER1_COMPA_vect) {  // timer1 interrupt
@@ -113,46 +113,47 @@ ISR(TIMER1_COMPA_vect) {  // timer1 interrupt
   int hatz =
       ((zmax - 1) / hatMax) * 4;  // should result in -4, 0, 4 vertical twitch
 
-#define HATLEFT -1
-#define HATUP -4
-#define HATDOWN 4
-#define HATRIGHT 1
-#define NOHAT 0
+  
+  #define HATLEFT -1
+  #define HATUP -4
+  #define HATDOWN 4
+  #define HATRIGHT 1
+  #define NOHAT 0
 
   switch (hatx + hatz) {
-    case NOHAT:
-      hat = JOYSTICK_HATSWITCH_RELEASE);
+    case NOHAT  :
+      hat = JOYSTICK_HATSWITCH_RELEASE;
       break;
-    case HATUP:
+    case HATUP  :
       hat = 0;
       break;
-    case HATUP + HATRIGHT:
+    case HATUP + HATRIGHT  :
       hat = 45;
       break;
-    case HATRIGHT:
+    case HATRIGHT  :
       hat = 90;
       break;
-    case HATDOWN + HATRIGHT:
+    case HATDOWN + HATRIGHT  :
       hat = 135;
       break;
-    case HATDOWN:
+    case HATDOWN  :
       hat = 180;
       break;
-    case HATDOWN + HATLEFT:
+    case HATDOWN + HATLEFT  :
       hat = 225;
       break;
-    case HATLEFT:
+    case HATLEFT  :
       hat = 270;
       break;
-    case HATUP + HATLEFT:
+    case HATUP + HATLEFT  :
       hat = 315;
       break;
-    default:
+    default  :
       Serial.print("unexpected hat value. Condition: ");
       Serial.print(hatx + hatz);
       hat = JOYSTICK_HATSWITCH_RELEASE;
   }
-
+  
   sei();  // play ball
 }
 
