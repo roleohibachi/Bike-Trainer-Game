@@ -8,7 +8,7 @@ const int hatMax = 1024;  // TODO: ???
 const int hallPin = 3;  // must be interruptable. 0, 1, 2, 3, 7 for Arduino
                         // Micro
 
-int throttleMax = 30;  // mi/hr
+int throttleMax = 30;  // mi/hr. TODO:Vary with pot?
 const int mphPerRpm = 150; //calculated 197.416, we'll see!
 int mph = 0;
 int revs = 0;
