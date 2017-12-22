@@ -42,7 +42,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(hallPin), throttleISR, RISING);
 
   Timer1.initialize(250*1000); //microseconds = 250msec = 0.25sec
-  Timer1.attachInterrupt(timerISR); 
+  Timer1.attachInterrupt(timer1ISR); 
   
   Serial.begin(115200);
 
@@ -103,7 +103,7 @@ void loop() {
   Joystick.sendState();
 }
 
-void timerISR {  // timer1 interrupt
+void timer1ISR(void) {  // timer1 interrupt
   cli();  // so this interrupt doesn't get interrupted mid-write by the other
           // one
   lastRev = revs;
