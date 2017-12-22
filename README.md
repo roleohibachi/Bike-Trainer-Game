@@ -6,7 +6,7 @@ This project turns a "dumb" bike trainer into a joystick/throttle controller tha
 
 # Hardware
 
-This requires an ATMega32U4 device, such as an Arduino Leonardo or Micro. Eventually, it should also work on a Teensy. Be sure to use a 3.3v microcontroller (or a level shifter), so you don't fry the nunchuck.
+This requires an ATMega32U4 device, such as an Arduino Leonardo or Micro. It very well could work on a Teensy - if you have one, let me know. Just be sure to use a 3.3v microcontroller (or a level shifter), so you don't fry the nunchuck.
 
 I used [this](http://a.co/gge61I9) bike trainer. Remove the 3 screws and plastic panel covering the rotor. Add two small permanent magnets to the inside of the rotor. Put a digital Hall effect sensor through the slots in the rotor's plastic cover. These should be cemented in place once they are verified to be functional, since it spins at a few thousand RPM. TODO: pictures.
 
@@ -28,3 +28,4 @@ The nunchuck's joystick is mapped to the HID joystick's X and Y axes, and polled
 # External Dependencies
 - Matthew Heironimus's [ArduinoJoystick](https://github.com/MHeironimus/ArduinoJoystickLibrary) library, to appear as a USB HID Joystick.
 - Gabriel Bianconi's [arduino-nunchuck](https://github.com/GabrielBianconi/arduino-nunchuk) library, to demux the i2c data from the nunchuck.
+- Paul Stoffregen's [modified TimerOne](https://github.com/PaulStoffregen/TimerOne) library, to make timers port across boards.
