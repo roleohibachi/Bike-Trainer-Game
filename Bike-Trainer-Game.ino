@@ -7,32 +7,35 @@ const int hatMax = 1024;  // TODO: ???
 const int hallPin = 3;  // must be interruptable. 0, 1, 2, 3, 7 for Arduino
                         // Micro
 
-int lastRev = 0;
-int revs = 0;
+volatile int lastRev = 0;
+volatile int revs = 0;
 
-int xmax = 0;
-int zmax = 0;
-int hat = -1;
+volatile int xmax = 0;
+volatile int zmax = 0;
+volatile int hat = -1;
 
 ArduinoNunchuk nunchuck = ArduinoNunchuk();
 
 void setup() {
-  cli();  // disable interrupts
 
   pinMode(hallPin, INPUT);
-  attachInterrupt(digitalPinToInterrupt(hallPin), throttleISR, RISING);
-
-  msecTimer(250);
-
+  
   Serial.begin(115200);
+
+  Serial.println();
+  Serial.println();
 
   Serial.print("throttle\t");
   Serial.print("nunZ\tnunC\t");
   Serial.print("nunX\tnunY");
   Serial.print("accX\taccY\taccZ");
+  Serial.println();
 
   nunchuck.init();
 
+  cli();  // disable interrupts. DO NOT Serial.println() until interrupts are back on, or a watchdog will get you.
+  msecTimer(250);
+  attachInterrupt(digitalPinToInterrupt(hallPin), throttleISR, RISING);
   sei();  // allow interrupts
 }
 
