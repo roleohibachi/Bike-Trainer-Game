@@ -2,13 +2,15 @@
 #include <Joystick.h>
 #include <ArduinoNunchuk.h>
 
-int throttleMax = 50;  // starter value, roughly observed. Vary with pot?
-const int hatMax = 1024;  // TODO: ???
+const int samplePeriod = 250;  // msec
 
+const int hatMax = 1024;  // TODO: ???
 const int hallPin = 3;  // must be interruptable. 0, 1, 2, 3, 7 for Arduino
                         // Micro
 
-int lastRev = 0;
+int throttleMax = 30;  // mi/hr
+const int mphPerRpm = 150; //calculated 197.416, we'll see!
+int mph = 0;
 int revs = 0;
 
 int xmax = 0;
@@ -41,7 +43,7 @@ void setup() {
   pinMode(hallPin, INPUT);
   attachInterrupt(digitalPinToInterrupt(hallPin), throttleISR, RISING);
 
-  Timer1.initialize(250*1000); //microseconds = 250msec = 0.25sec
+  Timer1.initialize(samplePeriod*1000); //microseconds = 250msec = 0.25sec
   Timer1.attachInterrupt(timer1ISR); 
   
   Serial.begin(115200);
@@ -51,6 +53,7 @@ void setup() {
   Serial.print("nunX\tnunY");
   Serial.print("accX\taccY\taccZ");
 
+  
   Joystick.setThrottleRange(0, throttleMax);
   Joystick.setXAxisRange(-127, 127);  // TODO: no idea
   Joystick.setYAxisRange(-127, 127);  // TODO: no idea
@@ -65,10 +68,10 @@ void setup() {
 void loop() {
   // throttle
   // counted in throttleISR
-  // lastrev updated in timer ISR
-  Serial.print(lastRev);
+  // mph updated in timer ISR
+  Serial.print(mph);
   Serial.print("\t");
-  Joystick.setThrottle(lastRev);
+  Joystick.setThrottle(mph);
 
   // nunchuck
   nunchuck.update();
@@ -106,7 +109,7 @@ void loop() {
 void timer1ISR(void) {  // timer1 interrupt
   cli();  // so this interrupt doesn't get interrupted mid-write by the other
           // one
-  lastRev = revs;
+  mph = revs*mphPerRpm;
   revs = 0;
 
   // TODO: test this, it's sloppy
