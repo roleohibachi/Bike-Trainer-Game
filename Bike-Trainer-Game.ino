@@ -1,4 +1,3 @@
-//#include <TimerOne.h>
 #include <ArduinoNunchuk.h>
 
 const int samplePeriod = 250;  // msec
