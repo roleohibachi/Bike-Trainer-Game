@@ -1,5 +1,4 @@
 #include <TimerOne.h>
-#include <Joystick.h>
 #include <ArduinoNunchuk.h>
 
 const int samplePeriod = 250;  // msec
@@ -15,37 +14,16 @@ int revs = 0;
 
 int xmax = 0;
 int zmax = 0;
-int hat = JOYSTICK_HATSWITCH_RELEASE;
+int hat = -1;
 
 ArduinoNunchuk nunchuck = ArduinoNunchuk();
 
-Joystick_ Joystick(  // optimized for nunchuck+bike throttle, I think
-    JOYSTICK_DEFAULT_REPORT_ID,  // hidReportId
-    JOYSTICK_TYPE_JOYSTICK,      // joystickType
-    2,  // buttonCount
-    0,  // hatSwitchCount
-    true,   // includeXAxis
-    true,   // includeYAxis
-    false,  // includeZAxis
-    false,  // includeRxAxis
-    false,  // includeRyAxis
-    false,  // includeRzAxis
-    false,  // includeRudder
-    true,   // includeThrottle
-    false,  // includeAccelerator
-    false,  // includeBrake
-    false   // includeSteering
-    );
-
 void setup() {
-  cli();  // disable interrupts
+  //cli();  // disable interrupts
 
   pinMode(hallPin, INPUT);
   attachInterrupt(digitalPinToInterrupt(hallPin), throttleISR, RISING);
-
-  Timer1.initialize(samplePeriod*1000); //microseconds = 250msec = 0.25sec
-  Timer1.attachInterrupt(timer1ISR); 
-  
+ 
   Serial.begin(115200);
 
   Serial.print("throttle\t");
@@ -53,16 +31,12 @@ void setup() {
   Serial.print("nunX\tnunY");
   Serial.print("accX\taccY\taccZ");
 
-  
-  Joystick.setThrottleRange(0, throttleMax);
-  Joystick.setXAxisRange(-127, 127);  // TODO: no idea
-  Joystick.setYAxisRange(-127, 127);  // TODO: no idea
-  Joystick.begin(false);  // do not auto-update; I'll send updates via
-                          // setThrottle(value) etc
-
   nunchuck.init();
 
-  sei();  // allow interrupts
+
+  //Timer1.initialize(samplePeriod*1000); //microseconds = 250msec = 0.25sec
+  //Timer1.attachInterrupt(timer1ISR); 
+  //sei();  // allow interrupts
 }
 
 void loop() {
@@ -71,7 +45,6 @@ void loop() {
   // mph updated in timer ISR
   Serial.print(mph);
   Serial.print("\t");
-  Joystick.setThrottle(mph);
 
   // nunchuck
   nunchuck.update();
@@ -91,19 +64,11 @@ void loop() {
   Serial.print(nunchuck.accelZ, DEC);
   Serial.println();
 
-  Joystick.setButton(0, nunchuck.zButton);
-  Joystick.setButton(1, nunchuck.cButton);
-  Joystick.setXAxis(nunchuck.analogX);
-  Joystick.setYAxis(nunchuck.analogY);
-
   // accelerometer hat
   // poll for max value
   // update value in timer ISR
   xmax = (abs(nunchuck.accelX) > abs(xmax)) ? nunchuck.accelX : xmax;
   zmax = (abs(nunchuck.accelZ) > abs(zmax)) ? nunchuck.accelZ : zmax;
-  Joystick.setHatSwitch(0, hat);
-
-  Joystick.sendState();
 }
 
 void timer1ISR(void) {  // timer1 interrupt
@@ -127,7 +92,7 @@ void timer1ISR(void) {  // timer1 interrupt
 
   switch (hatx + hatz) {
     case NOHAT  :
-      hat = JOYSTICK_HATSWITCH_RELEASE;
+      hat = -1;
       break;
     case HATUP  :
       hat = 0;
@@ -156,7 +121,7 @@ void timer1ISR(void) {  // timer1 interrupt
     default  :
       Serial.print("unexpected hat value. Condition: ");
       Serial.print(hatx + hatz);
-      hat = JOYSTICK_HATSWITCH_RELEASE;
+      hat = -1;
   }
   
   sei();  // play ball
