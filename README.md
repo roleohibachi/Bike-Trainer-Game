@@ -2,7 +2,7 @@
 
 This needs a better name. It is not, itself, a game. Recommendations are appreciated.
 
-This project creates a bike trainer that can be used to play games. Pedal speed is a USB throttle; a Wii nunchuck serves as a controller. You can fly a flight sim (fun), play a driving game (hard), or even map it to an FPS (Untested). It works with linux, mac, windows, consoles that support USB joysticks, and mobile devices that support both HID Joysticks and USB-OTG connections. The nunchuck works most comfortably when riding with aero bars.
+This project turns a "dumb" bike trainer into a joystick/throttle controller that can be used to play games. Pedal speed is a USB throttle; a Wii nunchuck serves as a controller. You can fly a flight sim (fun), play a driving game (hard), or even map it to an FPS (Untested). It works with linux, mac, windows, consoles that support USB joysticks, and mobile devices that support both HID Joysticks and USB-OTG connections. The nunchuck works most comfortably when riding with aero bars.
 
 # Hardware
 
